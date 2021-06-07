@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'models/news_data.dart';
 import 'pages/stories_page.dart';
 
 // import 'pages/main_page.dart';
@@ -17,7 +19,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       // home: MainPage(),
-      home: StoriesPage(),
+      home: ChangeNotifierProvider(
+        create: (context) => NewsData(),
+        builder: (context, child) {
+          return StoriesPage();
+        },
+      ),
     );
   }
 }
