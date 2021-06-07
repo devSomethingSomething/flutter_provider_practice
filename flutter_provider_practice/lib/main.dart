@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(
@@ -23,11 +24,38 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('Building MainPage');
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Data Here'),
-      ),
-      body: Screen2(),
+    // This is where the provider starts to be used
+    // Also only place it as high up as needed, do not
+    // place it higher than it should be
+    return ChangeNotifierProvider(
+      // Must give it create, then the model class name
+      create: (context) => AppData(),
+      builder: (context, child) {
+        return Scaffold(
+          appBar: AppBar(
+            // Old way, now we use provider
+            // title: Text('Data Here'),
+            title: Text(
+              // Old way, there is the simpler approach below
+              // Provider.of<AppData>(context).name,
+              context.watch<AppData>().name,
+            ),
+          ),
+          body: Screen2(),
+        );
+      },
+      // So we should not use child, can throw an exception
+      // See solution above, use builder instead
+      // child: Scaffold(
+      //   appBar: AppBar(
+      //     // Old way, now we use provider
+      //     // title: Text('Data Here'),
+      //     title: Text(
+      //       Provider.of<AppData>(context).name,
+      //     ),
+      //   ),
+      //   body: Screen2(),
+      // ),
     );
   }
 }
@@ -66,13 +94,39 @@ class Screen4 extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Data Here'),
+          // Text('Data Here'),
+          Text(
+            // Provider.of<AppData>(context).name,
+            context.watch<AppData>().name,
+          ),
           ElevatedButton(
-            onPressed: () {},
+            // Well this is not part of the widget tree
+            onPressed: () {
+              // Not part of the widget tree, need to handle this
+              // Need to set listen to false for things not part of
+              // the widget tree
+              // Provider.of<AppData>(context, listen: false)
+              //     .changeData('John Doe');
+              context.read<AppData>().changeData('Jane Doe');
+            },
             child: Text('Change data'),
           ),
         ],
       ),
     );
   }
+}
+
+/// Model class, should go in a models folder
+class AppData with ChangeNotifier {
+  String _name = 'John Rambo';
+
+  void changeData(String data) {
+    _name = data;
+
+    // Must call this to notify any listeners
+    notifyListeners();
+  }
+
+  String get name => _name;
 }
