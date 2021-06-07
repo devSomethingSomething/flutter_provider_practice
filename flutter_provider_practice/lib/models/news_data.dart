@@ -10,6 +10,12 @@ class NewsData with ChangeNotifier {
 
   String _errorMessage = '';
 
+  Map<String, dynamic> get map => _map;
+
+  bool get error => _error;
+
+  String get errorMessage => _errorMessage;
+
   Future<void> get fetchData async {
     final response = await get(
       Uri.parse(
@@ -36,6 +42,16 @@ class NewsData with ChangeNotifier {
 
       _map = {};
     }
+
+    notifyListeners();
+  }
+
+  void initialValues() {
+    _map = {};
+
+    _error = false;
+
+    _errorMessage = '';
 
     notifyListeners();
   }
