@@ -35,10 +35,19 @@ class MainPage extends StatelessWidget {
           appBar: AppBar(
             // Old way, now we use provider
             // title: Text('Data Here'),
-            title: Text(
+            // Consumer is the way to go
+            // Prevents entire rebuilds
+            title: Consumer<AppData>(
+              // child: Text(
               // Old way, there is the simpler approach below
               // Provider.of<AppData>(context).name,
-              context.watch<AppData>().name,
+              // context.watch<AppData>().name,
+              // ),
+              builder: (context, value, child) {
+                return Text(
+                  value.name,
+                );
+              },
             ),
           ),
           body: Screen2(),
@@ -95,9 +104,21 @@ class Screen4 extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Text('Data Here'),
-          Text(
+          // Text(
+          // Provider.of<AppData>(context).name,
+          // context.watch<AppData>().name,
+          // ),
+          Consumer<AppData>(
+            // child: Text(
+            // Old way, there is the simpler approach below
             // Provider.of<AppData>(context).name,
-            context.watch<AppData>().name,
+            // context.watch<AppData>().name,
+            // ),
+            builder: (context, value, child) {
+              return Text(
+                value.name,
+              );
+            },
           ),
           ElevatedButton(
             // Well this is not part of the widget tree
